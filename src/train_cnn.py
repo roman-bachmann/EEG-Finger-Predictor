@@ -5,6 +5,7 @@ from models import CNN_Model
 from train_utils import k_fold_cv, train_model
 from plots import plot_learning_curves, plot_CV_learning_curves
 
+# cudnn for convolution computation speedup. Will behave non-deterministically
 if torch.cuda.is_available():
     import torch.backends.cudnn as cudnn
     cudnn.enabled = True

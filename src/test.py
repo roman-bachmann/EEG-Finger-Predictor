@@ -1,27 +1,27 @@
 import torch
-import itertools
+from torch.autograd import Variable
 from data_handler import load_eeg_data, create_dataloader, augment_dataset
 from models import CNN_Model
-torch.manual_seed(42)
+torch.manual_seed(12345) # For reproducibility
 
+# Set cudnn flags to True for speed increase, but lose reproducibility
 if torch.cuda.is_available():
     import torch.backends.cudnn as cudnn
-    cudnn.enabled = True
-    cudnn.benchmark = True
-
+    cudnn.enabled = False
+    cudnn.benchmark = False
 
 # Loading and processing the data
 print('Loading the data')
 train_input, train_target, test_input, test_target = load_eeg_data(feature_dim_last=True,
                                                                    standardize=True, one_khz=True)
 
-train_input, train_target = augment_dataset(train_input, train_target, 0.01, 15)
+train_input, train_target = augment_dataset(train_input, train_target, 0.1, 15)
 dset_loaders, dset_sizes = create_dataloader(train_input, train_target, test_input, test_target, batch_size=64)
 
 
 # Defining the model
 model = CNN_Model(train_input.shape[1], kernel_sizes=[3,5,7],
-                  conv_channels=[28,64,1], dropout=0.1)
+                  conv_channels=[28,32,16,1], dropout=0.1)
 criterion = torch.nn.CrossEntropyLoss()
 learning_rate = 1e-3
 weight_decay = 1e-4 # L2 regularizer parameter
@@ -31,9 +31,11 @@ if torch.cuda.is_available():
     model.cuda()
     criterion.cuda()
 
-model.train(True)  # Set model to training mode
 
-num_epochs=3
+# Training the model
+model.train(True)
+
+num_epochs=6
 for epoch in range(num_epochs):
     print('Epoch {}/{}'.format(epoch+1, num_epochs))
     print('-' * 10)
@@ -56,7 +58,7 @@ for epoch in range(num_epochs):
         optimizer.zero_grad()
 
         # Forward pass
-        preds = model(inputs, hidden)
+        preds = model(inputs)
 
         loss = criterion(preds, labels)
 
@@ -75,7 +77,7 @@ for epoch in range(num_epochs):
 
 
 # Evaluating final model on test data
-model.train(False)  # Set model to testing mode
+model.train(False)
 
 running_loss = 0.0
 running_corrects = 0
@@ -91,8 +93,7 @@ for data in dset_loaders['val']:
     else:
         inputs, labels = Variable(inputs), Variable(labels)
 
-    hidden = model.init_hidden(len(inputs))
-    preds = model(inputs, hidden)
+    preds = model(inputs)
 
     loss = criterion(preds, labels)
     running_loss += loss.data[0]

@@ -2,7 +2,7 @@ import torch
 from torch.autograd import Variable
 from data_handler import load_eeg_data, create_dataloader, augment_dataset
 from models import LSTM_Model
-torch.manual_seed(42)
+torch.manual_seed(12345) # For reproducibility
 
 
 # Loading and processing the data
@@ -12,6 +12,7 @@ train_input, train_target, test_input, test_target = load_eeg_data(feature_dim_l
 
 train_input, train_target = augment_dataset(train_input, train_target, 0.01, 15)
 dset_loaders, dset_sizes = create_dataloader(train_input, train_target, test_input, test_target, batch_size=64)
+
 
 # Defining the model
 model = LSTM_Model(train_input.shape[2], hidden_size=256, num_layers=2, dropout=0.1)
@@ -24,7 +25,9 @@ if torch.cuda.is_available():
     model.cuda()
     criterion.cuda()
 
-model.train(True)  # Set model to training mode
+
+# Training the model
+model.train(True)
 
 num_epochs=3
 for epoch in range(num_epochs):
@@ -69,7 +72,7 @@ for epoch in range(num_epochs):
 
 
 # Evaluating final model on test data
-model.train(False)  # Set model to testing mode
+model.train(False)
 
 running_loss = 0.0
 running_corrects = 0
