@@ -2,7 +2,9 @@ import dlc_bci as bci
 import torch
 from torch.utils.data import TensorDataset, DataLoader
 
+
 DATA_PATH = '../data_bci'
+
 
 def load_eeg_data(feature_dim_last=True, standardize=True, one_khz=True):
     """
@@ -88,18 +90,18 @@ def augment_dataset(train_input, train_target, std_dev, multiple):
 
     Args:
 
-        train_input (): Input training data
+        train_input (torch.FloatTensor): Input training data
 
-        train_target (): Target training data
+        train_target (torch.FloatTensor): Target training data
 
-        std_dev (int): Standard deviation of gaussian noise to apply
+        std_dev (float): Standard deviation of gaussian noise to apply
 
         multiple (int): Factor by how much the dataset should be bigger
     """
     new_train_input = train_input.clone()
     new_train_target = train_target.clone()
     for i in range(multiple-1):
-        augmented_input = train_input + torch.zeros(train_input.shape).normal_(0, std_dev)
+        augmented_input = train_input + torch.zeros_like(train_input).normal_(0, std_dev)
         new_train_input = torch.cat((new_train_input, augmented_input))
         new_train_target = torch.cat((new_train_target, train_target))
     return new_train_input, new_train_target
