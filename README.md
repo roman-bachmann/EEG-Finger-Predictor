@@ -15,7 +15,7 @@ First project of the EPFL Spring 2018 Deep Learning Class
 	- **dlc\_bci.py**: Course provided loader of the BCI dataset
 	- **models.py**: Contains the PyTorch LSTM and CNN model architectures
 	- **plots.py**: Contains functionality to plot training and cross validation loss and accuracy curves
-	- **train\_best\_cnn.py**: Script to train and test best CNN architecture
+	- **test.py**: Script to train and test best CNN architecture
 	- **train\_best\_lstm.py**: Script to train and test best LSTM architecture
 	- **train\_cnn.py**: Gridsearch running cross validation over parameter configurations to find best CNN architecture
 	- **train\_lstm.py**: Gridsearch running cross validation over parameter configurations to find best LSTM architecture
@@ -24,7 +24,18 @@ First project of the EPFL Spring 2018 Deep Learning Class
 - **data\_bci/**: Path where data will automatically be downloaded to on the first run
 - **README.md**
 
-## How to run
+## How to run test files
 
+To get the same results as in the report, run the models on a GPU.
 
-``` $ cd src & python train_best_lstm.py ```
+To run file that returns the train and test accuracies / losses of the best CNN model run:
+
+```
+$ cd src && python test.py
+```
+
+To run file that returns the train and test accuracies / losses of the best LSTM model run:
+
+```
+$ cd src && python train_best_lstm.py
+```
