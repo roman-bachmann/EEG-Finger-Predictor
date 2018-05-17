@@ -26,7 +26,7 @@ First project of the EPFL Spring 2018 Deep Learning Class
 
 ## How to run test files
 
-To get the same results as in the report, run the models on a GPU.
+To get the same numerical results as in the report, run the models on a GPU.
 
 To run file that returns the train and test accuracies / losses of the best CNN model run:
 
@@ -34,8 +34,9 @@ To run file that returns the train and test accuracies / losses of the best CNN 
 $ cd src && python test.py
 ```
 
-To run file that returns the train and test accuracies / losses of the best LSTM model run:
+To run file that returns the train and test accuracies / losses of the best LSTM model run (Takes very long to train if not on a GPU!):
 
 ```
 $ cd src && python train_best_lstm.py
 ```
+
