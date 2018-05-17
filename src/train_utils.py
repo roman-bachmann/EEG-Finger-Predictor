@@ -149,9 +149,9 @@ def k_fold_cv(model, train_input, train_target, criterion, learning_rate,
 
         model (torch.nn.Module): The neural network model that should be trained.
 
-        train_input (torch.FloatTensor): Training input data
+        train_input (FloatTensor): Training input data
 
-        train_target (torch.FloatTensor): Training target data
+        train_target (FloatTensor): Training target data
 
         criterion (PyTorch criterion): PyTorch criterion (e.g. CrossEntropyLoss)
 

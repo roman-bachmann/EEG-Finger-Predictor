@@ -5,6 +5,9 @@ from torch.nn import functional as F
 
 class LSTM_Model(torch.nn.Module):
     """
+    Creates a LSTM network with a fully connected output layer.
+    init_hidden() has to be called for every minibatch to reset the hidden state.
+
     Args:
 
         input_size (int): Length of input vector for each time step
@@ -42,8 +45,10 @@ class LSTM_Model(torch.nn.Module):
         return x
 
     def init_hidden(self, batch_size):
-        # Initializing the hidden layer.
-        # Call every mini-batch, since nn.LSTM does not reset it itself.
+        '''
+        Initializing the hidden layer.
+        Call every mini-batch, since nn.LSTM does not reset it itself.
+        '''
         h_0 = torch.zeros(self.num_layers, batch_size, self.hidden_size)
         c_0 = torch.zeros(self.num_layers, batch_size, self.hidden_size)
         if torch.cuda.is_available():
@@ -53,6 +58,9 @@ class LSTM_Model(torch.nn.Module):
 
 class CNN_Model(torch.nn.Module):
     """
+    Creates a multilayer CNN with multiple CNN pipelines running in parallel
+    before being connected to two fully connected layers.
+
     Args:
 
         time_steps (int): Length of entire sequence.
